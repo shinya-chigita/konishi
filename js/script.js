@@ -6,24 +6,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const navMenu = document.querySelector('.nav-menu');
     const navLinks = document.querySelectorAll('.nav-menu a');
 
-    hamburger.addEventListener('click', () => {
-        const isExpanded = hamburger.getAttribute('aria-expanded') === 'true';
-        hamburger.setAttribute('aria-expanded', !isExpanded);
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        
-        if(navMenu.classList.contains('active')){
-            hamburger.querySelector('.bar:nth-child(1)').style.transform = 'rotate(45deg) translate(5px, 5px)';
-            hamburger.querySelector('.bar:nth-child(2)').style.opacity = '0';
-            hamburger.querySelector('.bar:nth-child(3)').style.transform = 'rotate(-45deg) translate(5px, -5px)';
-        } else {
-            hamburger.querySelectorAll('.bar').forEach(bar => bar.style.transform = 'none');
-            hamburger.querySelector('.bar:nth-child(2)').style.opacity = '1';
-        }
-    });
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            const isExpanded = hamburger.getAttribute('aria-expanded') === 'true';
+            hamburger.setAttribute('aria-expanded', !isExpanded);
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            
+            if(navMenu.classList.contains('active')){
+                hamburger.querySelector('.bar:nth-child(1)').style.transform = 'rotate(45deg) translate(5px, 5px)';
+                hamburger.querySelector('.bar:nth-child(2)').style.opacity = '0';
+                hamburger.querySelector('.bar:nth-child(3)').style.transform = 'rotate(-45deg) translate(5px, -5px)';
+            } else {
+                hamburger.querySelectorAll('.bar').forEach(bar => bar.style.transform = 'none');
+                hamburger.querySelector('.bar:nth-child(2)').style.opacity = '1';
+            }
+        });
+    }
 
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
+            if (!hamburger || !navMenu) return;
             hamburger.classList.remove('active');
             navMenu.classList.remove('active');
             hamburger.setAttribute('aria-expanded', 'false');
@@ -90,28 +93,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalDate = document.getElementById('modal-date-text');
     const modalBody = document.getElementById('modal-body-text');
 
-    newsCards.forEach(card => {
-        card.addEventListener('click', () => {
-            const title = card.querySelector('.news-title').textContent;
-            const date = card.querySelector('.news-date').textContent;
-            const detailText = "（詳細記事サンプル）\n\nここに記事の全文が入ります。クリックされた記事タイトルは「" + title + "」です。\n\n橋本市での活動を通して、地域の皆様から頂いた声を形にするため、日々奔走しております。";
+    if (modal && modalClose && modalTitle && modalDate && modalBody && newsCards.length > 0) {
+        newsCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const title = card.querySelector('.news-title').textContent;
+                const date = card.querySelector('.news-date').textContent;
+                const detailText = "（詳細記事サンプル）\n\nここに記事の全文が入ります。クリックされた記事タイトルは「" + title + "」です。\n\n橋本市での活動を通して、地域の皆様から頂いた声を形にするため、日々奔走しております。";
 
-            modalTitle.textContent = title;
-            modalDate.textContent = date;
-            modalBody.textContent = detailText;
-            modal.classList.add('active');
-            modal.setAttribute('aria-hidden', 'false');
+                modalTitle.textContent = title;
+                modalDate.textContent = date;
+                modalBody.textContent = detailText;
+                modal.classList.add('active');
+                modal.setAttribute('aria-hidden', 'false');
+            });
         });
-    });
 
-    const closeModal = () => {
-        modal.classList.remove('active');
-        modal.setAttribute('aria-hidden', 'true');
-    };
-    modalClose.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
+        const closeModal = () => {
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
+        };
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    }
 
     // 6. フォーム送信処理（ダミー）
     const forms = document.querySelectorAll('form');
